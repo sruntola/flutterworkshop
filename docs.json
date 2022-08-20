@@ -1,3 +1,7 @@
 {
-    "name" : "Flutter Internal Workshop"
+    "name" : "Flutter Internal Workshop",
+    "sidebar": [
+        ["Example", "/example"],
+        ["Section Title", [["Nested Title", "/nested-example"]]]
+    ]
 }
