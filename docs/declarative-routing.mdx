@@ -1,1 +1,34 @@
-Hello Declaration
+# Declarative Routing
+[go_router](https://pub.dev/packages/go_router) is governed by a set of routes which you specify as part of the GoRouter constructor.
+
+In this part, you will learn how to declare route with GoRouter constructor. 
+Inside your config folder, please create file <em>route.dart</em> as follow code as below:
+
+```
+final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      name: 'HomePage',
+      builder: (context, state) => const HomePage(),
+      routes: [
+        GoRoute(
+          path: 'books',
+          name: 'Books',
+          builder: (context, state) => const Books(),
+          routes: [
+            GoRoute(
+              path: ':id',
+              name: 'BookDetail',
+              builder: (context, state) => BookDetail(
+                id: int.tryParse(state.params['id']!),
+              ),
+            )
+          ],
+        )
+      ],
+    )
+  ],
+);
+
+```
