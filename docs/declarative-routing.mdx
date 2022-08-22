@@ -45,3 +45,16 @@ class App extends StatelessWidget {
 
 With the `router` in place, your app can now navigate between pages.
 
+To navigate between pages, use the `GoRouter.go` method:
+
+```dart
+// navigate using the GoRouter
+onTap: () => GoRouter.of(context).go('/profile')
+```
+
+`go_router` also provides a simplified means of navigation using Dart extension methods:
+
+```dart
+// navigate using the GoRouter more easily
+onTap: () => context.go('/profile')
+```
