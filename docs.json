@@ -1,7 +1,8 @@
 {
     "name" : "Flutter Internal Workshop by Mr. Tola",
     "sidebar": [
-        ["GoRouter", [["Introduction", "/introduction-to-go-router"]]],
-        ["Section Title", [["Nested Title", "/nested-example"]]]
+        ["GoRouter", [["Introduction", "/introduction-to-go-router",
+        "Part One - Declarative Routing", "/declarative-routing"]]],
+        ["Firebase Features", [["Nested Title", "/nested-example"]]]
     ]
 }
