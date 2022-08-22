@@ -1,7 +1,7 @@
 {
-    "name" : "Flutter Internal Workshop",
+    "name" : "Flutter Internal Workshop by Mr. Tola",
     "sidebar": [
-        ["Example", "/example"],
+        ["GoRouter", "/introduction-to-go-router"],
         ["Section Title", [["Nested Title", "/nested-example"]]]
     ]
 }
