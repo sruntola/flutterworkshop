@@ -1,0 +1,32 @@
+# Navigator without context
+
+It's easy to navigator screen from anywhere without passing context. 
+
+```dart
+router.goNamed('BookDetail', extra: book);
+router.push('/profile');
+router.go('/profile');
+```
+
+If you want to access context for showDialog or BottomSheet etc...
+you can access by: 
+
+```dart
+router.navigator!.context
+```
+
+Example: 
+
+```dart
+ScaffoldMessenger.of(router.navigator!.context).showSnackBar(
+    const SnackBar(
+      content: Text("Hello Snackbar"),
+    ),
+);
+```
+
+**Pop page until specific page**
+
+```dart
+context.go('your_path');
+```

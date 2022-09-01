@@ -1,0 +1,187 @@
+# Query Parameters & Extra
+
+## Query Parameters
+Including parameters in the path is one way to pass information to the page. A "path" parameter is required and inline with the location. The other way to pass data as part of a location is to use query parameters, which is a set of name-value pairs passed at the end of a URI after a ? character, e.g.
+
+```dart
+void _onTap()=> context.go('/books/$id/order?product-name=${book.title}');
+```
+
+Now look at our GoRouter again, we have updated router for book as below:
+
+```dart
+GoRoute(
+          path: 'books',
+          name: 'Books',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            opaque: false,
+            key: state.pageKey,
+            child: const Books(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) => child,
+          ),
+          routes: [
+            GoRoute(
+                path: ':id',
+                name: 'BookDetail',
+                builder: (context, state) => BookDetail(
+                      id: int.tryParse(state.params['id']!),
+                    ),
+                routes: [
+                  GoRoute(
+                    path: 'order',
+                    name: 'Order',
+                    builder: (context, state) => OrderDetail(
+                      id: int.tryParse(state.params['id'].toString()),
+                      productName: state.queryParams['product-name'],
+                    ),
+                  ),
+                ])
+          ],
+        )
+```
+
+To accept parameter using query paramenter, we use state of GoRoute 
+
+```dart
+//product-name maybe null
+productName: state.queryParams['product-name'],
+```
+
+If we want to set parameter as required just add '!' at the end of queryParam 
+
+```dart
+//product-name must assigned
+productName: state.queryParams['product-name']!,
+```
+
+`Order Detail Page`
+
+```dart
+class OrderDetail extends StatelessWidget {
+  final int? id;
+  final String? productName;
+  const OrderDetail({Key? key, this.id, this.productName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Order Detail'),
+      ),
+      body: Column(children: [
+        Text("Product ID: $id"),
+        Text("Product Name: $productName"),
+      ]),
+    );
+  }
+}
+```
+
+As we expected, we will get id of the book and pass it to `BookDetail` page and `OrderDetail` page, to do this we don't need to pass id value twice time, just add params to BookDetail and use it again in OrderDetail. We just set param name of `OrderDetail` same as param name in `BookDetail`, then we are ready to go.
+
+Now `BookDetail` page was updated
+
+```dart
+class BookDetail extends StatelessWidget {
+  final int? id;
+  const BookDetail({Key? key, this.id}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final BookModel book = books.firstWhere((item) => item.id == id);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Book Detail"),
+      ),
+      body: Column(
+        children: [
+          Center(child: Text("${book.title}")),
+          ElevatedButton(
+            onPressed: () {
+              context.go('/books/$id/order?product-name=${book.title}');
+            },
+            child: const Text("Order"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+As we see code above, we use dart extendtions to navigate from `BookDetail` page to `OrderDetail` page.
+
+```dart
+void _onTap()=> context.go('/books/$id/order?product-name=${book.title}');
+```
+
+or
+
+```dart
+void _onTap()=> context.goNamed(
+                'Order',
+                params: {'id': id.toString()},
+                queryParams: {
+                  "product-name": book.title.toString(),
+                },
+              );
+```
+
+## Extra Parameter 
+
+In addition to passing along path and query parameters, you can also pass along an extra object as part of your navigation, e.g.
+
+Now we updated GoRoute for Book as below:
+
+```dart
+GoRoute(
+          path: 'books',
+          name: 'Books',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            opaque: false,
+            key: state.pageKey,
+            child: const Books(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) => child,
+          ),
+          routes: [
+            GoRoute(
+                path: 'book-detail',
+                name: 'BookDetail',
+                builder: (context, state) => BookDetail(
+                      book: state.extra as BookModel,
+                    ),
+                routes: [
+                  GoRoute(
+                    path: 'order',
+                    name: 'Order',
+                    builder: (context, state) => OrderDetail(
+                      id: int.tryParse(state.params['id'].toString()),
+                      productName: state.queryParams['product-name'],
+                    ),
+                  ),
+                ])
+          ],
+        )
+```
+
+And our `BookDetail` route now: 
+
+```dart
+GoRoute(
+    path: 'book-detail',
+    name: 'BookDetail',
+    builder: (context, state) => BookDetail(
+        book: state.extra as BookModel,
+    )
+),
+```
+
+To navigate to BookDetail and pass object
+
+```dart
+void _onTap()=> context.go("/books/book-detail", extra: books[index])
+```
+
+

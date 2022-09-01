@@ -4,11 +4,12 @@
         ["GoRouter", 
             [
                 ["Introduction", "/introduction-to-go-router"],
-                ["Part One - Declarative Routing", "/declarative-routing"]
+                ["Part One - Declarative Routing", "/declarative-routing"],
+                ["Part Two - Sub-Routes and Parameters", "/parameter"],
+                ["Part Three - Sub-Routes and QueryParameters", "/query-parameter"],
+                ["Part Four - Navigation without context and access context","/navigator_without_context"],
+                ["Part Five - Deeplink", "/deeplink"]
             ]
-        ],
-        
-
-        ["Firebase Features", [["Nested Title", "/nested-example"]]]
+        ]
     ]
 }

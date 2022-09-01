@@ -1,0 +1,141 @@
+# Sub-Routes and Parameters
+
+To create sub-routes is so easy, just add a list of your childrent routes inside `routers`. See code below:
+
+```dart
+final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      name: 'HomePage',
+      builder: (context, state) => const HomePage(),
+      routes: [
+        GoRoute(
+          path: 'books',
+          name: 'Books',
+          builder: (context, state) => const Books(),
+          routes: [
+            GoRoute(
+              path: ':id',
+              name: 'BookDetail',
+              builder: (context, state) => BookDetail(
+                id: int.tryParse(state.params['id']!),
+              ),
+            )
+          ],
+        )
+      ],
+    ),
+    GoRoute(
+      path: '/profile',
+      name: 'Profile',
+      builder: (context, state) => const Profile(),
+    )
+  ],
+);
+```
+
+In this case, I created two more pages,
+- `Books` is the screen to display all books 
+- `BookDetail` it will take one argument as integer and query object from books list named books
+
+I also created `BookModel` class inside model folder 
+
+```dart
+class BookModel {
+  final int? id;
+  final String? title;
+  final String? author;
+  const BookModel({this.id, this.title, this.author});
+}
+```
+
+And a list of Books 
+
+```dart
+List<BookModel> books = [
+  const BookModel(
+      id: 1, title: 'Flutter Tutorial Book', author: 'Flutter Team'),
+  const BookModel(id: 2, title: 'Top Most Speaker', author: 'Jack'),
+  const BookModel(id: 3, title: 'The Magic', author: 'John'),
+];
+```
+
+Add the folling code to your Books screen: 
+
+```dart
+class Books extends StatelessWidget {
+  const Books({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Books")),
+      body: ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) => ListTile(
+          title: Text(books[index].title!),
+          subtitle: Text(books[index].author!),
+        ),
+      ),
+    );
+  }
+}
+```
+
+In this screen will render all item that exist in books list as ListTile widget
+
+To navigate page from `HomePage` to `Books` screens, you can navigate easily with `dart extendtions`:
+
+```dart
+ElevatedButton(
+    child: const Padding(
+    padding: EdgeInsets.all(15),
+    child: Text("Books"),
+        ),
+    onPressed: () => context.go("/books"),
+),
+```
+
+Pass the Parameters
+
+As we declare GoRouter above, if we want to navigator to BookDetail, we need to pass id of the book.
+Now look at BookPage first, we add onTap function to LisTile as below:
+
+`Book Page` updated
+
+```dart
+body: ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) => ListTile(
+          title: Text(books[index].title!),
+          subtitle: Text(books[index].author!),
+          onTap: () => context.go("/books/${books[index].id}"),
+        ),
+      ),
+```
+
+`Book Detail Page`
+
+```dart
+class BookDetail extends StatelessWidget {
+  final int? id;
+  const BookDetail({Key? key, this.id}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final BookModel book = books.firstWhere((item) => item.id == id);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Book Detail"),
+      ),
+      body: Column(
+        children: [
+          Center(child: Text("${book.title}")),
+        ],
+      ),
+    );
+  }
+}
+```
+
